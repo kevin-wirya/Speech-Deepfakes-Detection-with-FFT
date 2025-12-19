@@ -1,0 +1,85 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usetikzlibrary{positioning}
+\usepackage[
+    colorlinks=true,
+    urlcolor=blue
+]{hyperref}
+
+\newcommand{\blueulinehref}[2]{\href{#1}{\textcolor{blue}{\underline{\textit{#2}}}}}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\tikzset{
+    mynode/.style={circle, draw, fill=white, inner sep=2pt, font=\small},
+    mylabel/.style={font=\small, align=center},
+    myarrow/.style={-stealth, very thick}
+}
+
+\begin{document}
+
+\title{Speech Deepfakes Detection with Fast Fourier Transform using Complex Linear Algebra}
+
+\author{\IEEEauthorblockN{Kevin Wirya Valerian - 13524019}
+\IEEEauthorblockA{\textit{Program Studi Teknik Informatika} \\
+\textit{Sekolah Teknik Elektro dan Informatika}\\
+Institut Teknologi Bandung, Jl. Ganesha 10 Bandung 40132, Indonesia \\
+\blueulinehref{kevin.wirya.valerian@gmail.com}{kevin.wirya.valerian@gmail.com}
+\blueulinehref{13524019@std.stei.itb.ac.od}{13524019@std.stei.itb.ac.id}}
+}
+
+\maketitle
+
+\begin{abstract}
+Nowadays, the growing realism of speech deepfakes demands detection methods grounded in fundamental signal theory rather than purely data-driven models. A well-known speech deepfake detection approach is based on the Fast Fourier Transform (FFT), rooted in complex linear algebra and geometric signal representations. Speech signals are modeled as vectors in complex vector spaces, where the FFT acts as a structured linear transformation projecting time-domain data onto orthonormal bases of complex exponentials. From a geometric perspective, genuine and synthetic speech occupy distinct regions in high-dimensional spectral spaces. Subtle inconsistencies in phase alignment, spectral symmetry, and energy distribution are captured through algebraic and geometric measures, enabling robust and interpretable deepfake detection. The study contributes significantly to rapid AI and real speech distinction.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Fast fourier transform, deepfakes detection, complex linear algebra, spectral geometry
+\end{IEEEkeywords}
+
+% ===================================
+% Import chapter files
+% ===================================
+\input{chapters/01_introduction.tex}
+\input{chapters/02_theoretical_framework.tex}
+\input{chapters/03_methodology.tex}
+\input{chapters/04_implementation.tex}
+\input{chapters/05_case_analysis.tex}
+\input{chapters/06_conclusion.tex}
+
+% ===================================
+% Bibliography
+% ===================================
+\newpage
+\begin{thebibliography}{00}
+\bibitem{b1} Ni, Y., et al. (2024). "A Deepfake Detection Algorithm Based on Fourier Transform of Biological Signal." Tech Science Press. (Accessed on December 16, 2025) \href{https://www.techscience.com/cmc/v79n3/57116}{https://www.techscience.com/cmc/v79n3/57116}
+\bibitem{b2} Mai, K. T., Bray, S., Davies, T., and Griffin, L. D.Warning: Humans cannot reliably detect speech deepfakes.PLOS ONE, 18(8):1–20, 2023. (Accessed on December 19, 2025) \href{https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0285333}{https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0285333}
+\end{thebibliography}
+
+\section*{Statement}
+Hereby I declare that this paper that I have written is my own work, not a reproduction or translation of someone else's work and not plagiarized.
+
+\begin{flushright}
+Bandung, 20 Juni 2025\\
+\begin{minipage}[t]{0.3\textwidth} 
+    \centering
+    \hspace{2.2cm}
+    \includegraphics[width=3cm]{img/sign.jpg} 
+\end{minipage} \\
+Kevin Wirya Valerian\\
+13524019
+\end{flushright}
+
+\end{document}
