@@ -1,4 +1,261 @@
 \section{Theoretical Framework}
 
-% Write your theoretical framework here
+\subsection{Complex Numbers and Geometric Representation}
+
+A complex number is defined as
+\begin{equation}
+z = a + jb, \quad a, b \in \mathbb{R}
+\end{equation}
+where $a$ is the real part and $b$ is the imaginary part, with $j = \sqrt{-1}$. Both $i$ and $j$ represent the same imaginary unit. We use $j$ since it is commonly used for signal processing.
+
+Complex numbers admit a geometric interpretation in the complex plane, where the real part corresponds to the horizontal axis and the imaginary part to the vertical axis. This representation allows us to visualize complex numbers as vectors emanating from the origin.
+
+Every non-zero complex number can be expressed in polar form
+\begin{equation}
+z = r e^{j\theta}
+\end{equation}
+where
+\begin{itemize}
+    \item $r = |z| = \sqrt{a^2 + b^2}$ is the \textbf{magnitude}, representing the distance from the origin
+    \item $\theta = \arg(z) = \arctan(b/a)$ is the \textbf{phase}, representing the angle from the positive real (horizontal) axis
+\end{itemize}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=6cm]{img/complex_plane.png}}
+\caption{Argand Plane (Complex Plane)}
+\small \centering (Source: \href{https://helpingwithmath.com/complex-plane/}{https://helpingwithmath.com/complex-plane/})
+\label{fig}
+\end{figure}
+
+The exponential form relates to trigonometry via Euler's formula.
+\begin{equation}
+e^{j\theta} = \cos\theta + j\sin\theta
+\end{equation}
+
+The FFT spectrum of audio signals consists of complex-valued coefficients. Each coefficient $X_k$ can be decomposed into magnitude and phase components. The magnitude $|X_k|$ represents the energy at frequency bin $k$, while the phase $\angle X_k$ encodes temporal structure. A frequency bin is a specific range on the frequency axis used to group and analyze data. Our detection method exploits the observation that human speech exhibits \textbf{regular} phase structure, whereas AI-generated speech tends to have \textbf{irregular} phase structure.
+
+\subsection{Complex Vector Spaces $\mathbb{C}^N$}
+
+The set $\mathbb{C}^N$ of all $N$-tuples of complex numbers forms a vector space over the field $\mathbb{C}$. A vector $\mathbf{x} \in \mathbb{C}^N$ is written as
+\begin{equation}
+\mathbf{x} = \begin{pmatrix} x_0 \\ x_1 \\ \vdots \\ x_{N-1} \end{pmatrix}, \quad x_n \in \mathbb{C}
+\end{equation}
+
+Digital audio signals are naturally elements of $\mathbb{R}^N$ in the time domain and $\mathbb{C}^N$ in the frequency domain after FFT transformation. The standard inner product on $\mathbb{C}^N$ is defined as
+\begin{equation}
+\langle \mathbf{x}, \mathbf{y} \rangle = \sum_{n=0}^{N-1} x_n \overline{y_n}
+\end{equation}
+where $\overline{y_n}$ denotes the complex conjugate of $y_n$. This inner product induces the Euclidean norm.
+\begin{equation}
+\|\mathbf{x}\| = \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle} = \sqrt{\sum_{n=0}^{N-1} |x_n|^2}
+\end{equation}
+
+The squared norm $\|\mathbf{x}\|^2$ represents the total energy of the signal.
+
+\subsection{Discrete and Fast Fourier Transform}
+
+The Discrete Fourier Transform (DFT) converts a time-domain signal $\mathbf{x} \in \mathbb{C}^N$ to its frequency-domain representation $\mathbf{X} \in \mathbb{C}^N$ via:
+\begin{equation}
+X_k = \sum_{n=0}^{N-1} x_n e^{-j2\pi kn/N}, \quad k = 0, 1, \ldots, N-1
+\end{equation}
+
+This transformation can be interpreted as computing the inner product of the signal with complex exponential basis vectors at each frequency $k$. The inverse DFT reconstructs the time-domain signal:
+\begin{equation}
+x_n = \frac{1}{N}\sum_{k=0}^{N-1} X_k e^{j2\pi kn/N}, \quad n = 0, 1, \ldots, N-1
+\end{equation}
+
+The naive DFT requires $O(N^2)$ complex multiplications. The Fast Fourier Transform (FFT) reduces this to $O(N \log N)$ using a divide-and-conquer strategy. The key insight is that DFT can be decomposed into smaller DFTs of even and odd indexed elements.
+
+Let $\omega_N = e^{-j2\pi/N}$ be the primitive $N$-th root of unity. For $N = 2^m$, we split the DFT:
+\begin{align}
+X_k &= \sum_{n=0}^{N-1} x_n \omega_N^{kn} \\
+&= \sum_{n=0}^{N/2-1} x_{2n} \omega_N^{k(2n)} + \sum_{n=0}^{N/2-1} x_{2n+1} \omega_N^{k(2n+1)} \\
+&= \sum_{n=0}^{N/2-1} x_{2n} (\omega_N^2)^{kn} + \omega_N^k \sum_{n=0}^{N/2-1} x_{2n+1} (\omega_N^2)^{kn}
+\end{align}
+
+Since $\omega_N^2 = \omega_{N/2}$, this becomes
+\begin{equation}
+X_k = E_k + \omega_N^k O_k
+\end{equation}
+where $E_k$ is the DFT of even-indexed elements and $O_k$ is the DFT of odd-indexed elements, both of size $N/2$.
+
+Using the symmetry property $X_{k+N/2} = E_k - \omega_N^k O_k$, we compute both halves with a single recursion:
+\begin{align}
+X_k &= E_k + \omega_N^k O_k, \quad k = 0, \ldots, N/2-1 \\
+X_{k+N/2} &= E_k - \omega_N^k O_k, \quad k = 0, \ldots, N/2-1
+\end{align}
+
+The recursion bottoms out at $N=1$, where $X_0 = x_0$. The total complexity satisfies:
+\begin{equation}
+T(N) = 2T(N/2) + O(N) = O(N \log N)
+\end{equation}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=5cm]{img/time_to_freq_fft}}
+\caption{Time to Frequency Mapping By FFT (Complex Plane)}
+\small \centering (Source: \href{https://www.sciencedirect.com/topics/engineering/fast-fourier-transform}{https://www.sciencedirect.com/topics/engineering/fast-fourier-transform})
+\label{fig}
+\end{figure}
+
+The FFT preserves several important properties crucial for our detection method:
+
+\text{1. Energy Preservation (Parseval's Theorem)}
+\begin{equation}
+\sum_{n=0}^{N-1} |x_n|^2 = \frac{1}{N}\sum_{k=0}^{N-1} |X_k|^2
+\end{equation}
+
+This ensures that total signal energy is conserved between time and frequency domains.
+
+\text{2. Linearity} 
+
+FFT$(\alpha \mathbf{x} + \beta \mathbf{y}) = \alpha$FFT$(\mathbf{x}) + \beta$FFT$(\mathbf{y})$, allowing us to analyze signal components independently.
+
+\text{3. Symmetry for Real Signals:} 
+
+When $x_n \in \mathbb{R}$, we have $X_{N-k} = \overline{X_k}$, so only the first $N/2$ coefficients need to be stored.
+
+For our implementation, audio signals are real-valued in the time domain, so we extract magnitude and phase from the positive frequency components $k = 0, \ldots, N/2-1$.
+
+\subsection{Magnitude and Phase as Complex Algebraic Objects}
+
+Each FFT coefficient admits the polar decomposition:
+\begin{equation}
+X_k = |X_k| e^{j\theta_k}
+\end{equation}
+where:
+\begin{itemize}
+    \item $|X_k| = \sqrt{\text{Re}(X_k)^2 + \text{Im}(X_k)^2}$ is the spectral magnitude
+    \item $\theta_k = \arctan\left(\frac{\text{Im}(X_k)}{\text{Re}(X_k)}\right)$ is the spectral phase
+\end{itemize}
+
+Phase coherence measures the consistency of phase relationships across frequency bins. For a phase spectrum $\boldsymbol{\theta} = (\theta_0, \theta_1, \ldots, \theta_{N-1})$, we define
+\begin{equation}
+C(\boldsymbol{\theta}) = \left| \frac{1}{N} \sum_{k=0}^{N-1} e^{j\theta_k} \right|
+\end{equation}
+
+This metric ranges from 0 to 1:
+\begin{itemize}
+    \item $C = 1$: Perfectly coherent
+    \item $C = 0$: Completely random
+    \item $0 < C < 1$: Partial coherence
+\end{itemize}
+
+The phase velocity (or phase derivative) measures the smoothness of phase progression
+\begin{equation}
+v_k = \theta_{k+1} - \theta_k \pmod{2\pi}
+\end{equation}
+
+The variance of phase velocity indicates regularity:
+\begin{equation}
+\sigma_v^2 = \text{Var}(v_k)
+\end{equation}
+
+Low variance suggests smooth and natural phase evolution, while high variance indicates abrupt phase changes typical of synthesis artifacts.
+
+In our implementation, we quantify phase smoothness using the mean absolute phase gradient:
+\begin{equation}
+\bar{v} = \frac{1}{N-1}\sum_{k=0}^{N-2} |v_k|
+\end{equation}
+where smaller values of $\bar{v}$ indicate smoother phase transitions characteristic of natural speech, while larger values suggest the discontinuous phase patterns often present in synthesized audio.
+
+Modern AI voice synthesis (neural vocoders, GANs) primarily optimizes for perceptually accurate magnitude spectra because human hearing is more sensitive to magnitude than phase. However, these models often fail to produce coherent phase structure because phase reconstruction is mathematically ill-conditioned. 
+
+\subsection{Spectral Entropy and Energy Distribution}
+
+Spectral entropy quantifies the concentration of energy across the frequency spectrum. For a magnitude spectrum $\mathbf{M} = (|X_0|, |X_1|, \ldots, |X_{N-1}|)$, we first normalize to obtain a probability distribution
+\begin{equation}
+p_k = \frac{|X_k|}{\sum_{i=0}^{N-1} |X_i|}
+\end{equation}
+
+The spectral entropy is then defined as
+\begin{equation}
+H(\mathbf{M}) = -\sum_{k=0}^{N-1} p_k \log p_k
+\end{equation}
+
+This metric characterizes the distribution of spectral energy
+\begin{itemize}
+    \item \textbf{Low entropy}: Energy concentrated in few frequency bins (typical of human speech)
+    \item \textbf{High entropy}: Energy spread uniformly across frequencies (may indicate synthesis artifacts)
+\end{itemize}
+
+The spectral L2 norm
+\begin{equation}
+\|\mathbf{M}\|_2 = \sqrt{\sum_{k=0}^{N-1} |X_k|^2}
+\end{equation}
+represents the total energy in the signal and serves as a normalization factor for geometric distance computations.
+
+\subsection{Window-Based Phase Coherence Analysis}
+
+While global phase coherence provides an overall measure, local phase patterns can reveal subtle artifacts. We employ a sliding window approach to compute localized coherence. For a window size $w$, the local phase coherence at position $i$ is
+\begin{equation}
+C_i^{(w)} = \frac{1}{w}\left|\sum_{k=i}^{i+w-1} e^{j\theta_k}\right|
+\end{equation}
+
+The overall phase coherence is then the mean of all window coherences:
+\begin{equation}
+C_{\text{window}} = \frac{1}{N-w}\sum_{i=0}^{N-w-1} C_i^{(w)}
+\end{equation}
+
+This windowed approach offers several advantages:
+\begin{itemize}
+    \item Captures local phase consistency patterns
+    \item More robust to isolated phase discontinuities
+    \item Reveals frequency-dependent phase artifacts common in AI synthesis
+\end{itemize}
+
+The window size $w$ is typically chosen based on the expected correlation length of natural speech phase patterns.
+
+\subsection{Data Clustering}
+
+In our framework, audio samples form clusters in the complex feature space. Let $\mathcal{H} = \{\mathbf{h}_1, \ldots, \mathbf{h}_M\}$ be the set of feature vectors from human speech samples, with centroid
+\begin{equation}
+\boldsymbol{\mu}_H = \frac{1}{M}\sum_{i=1}^{M} \mathbf{h}_i
+\end{equation}
+
+Similarly, AI-generated samples form a cluster $\mathcal{A}$ with centroid $\boldsymbol{\mu}_A$. The optimal decision boundary lies at the midpoint between centroids:
+\begin{equation}
+\tau = \frac{\boldsymbol{\mu}_H + \boldsymbol{\mu}_A}{2}
+\end{equation}
+
+For a test sample with phase coherence $C$, the classification rule is:
+\begin{equation}
+\text{decision}(C) = \begin{cases}
+\text{HUMAN} & \text{if } C > \tau \\
+\text{AI-GENERATED} & \text{if } C \leq \tau
+\end{cases}
+\end{equation}
+where $\tau$ is the optimal threshold computed from the training data statistics.
+
+\subsection{Mahalanobis-Like Distance and Confidence Estimation}
+
+To quantify classification confidence, we compute standardized distances from the test sample to each cluster centroid. Given the phase coherence $C$ of a test sample, and the statistics $(\mu_H, \sigma_H)$ and $(\mu_A, \sigma_A)$ from the human and AI training sets respectively, we define:
+
+\begin{align}
+d_H(C) &= \frac{|C - \mu_H|}{\sigma_H + \epsilon} \\
+d_A(C) &= \frac{|C - \mu_A|}{\sigma_A + \epsilon}
+\end{align}
+
+where $\epsilon$ is a small constant to prevent division by zero. These distances are analogous to Mahalanobis distances in one dimension, accounting for the variance of each class.
+
+The confidence score is computed from the relative distances:
+\begin{equation}
+\text{confidence} = 1 - \frac{\min(d_H, d_A)}{\max(d_H, d_A) + \epsilon}
+\end{equation}
+
+This confidence metric has the following properties:
+\begin{itemize}
+    \item $\text{confidence} \in [0, 1]$
+    \item High confidence ($\approx 1$): Test sample is much closer to one cluster than the other
+    \item Low confidence ($\approx 0$): Test sample is equidistant from both clusters (ambiguous case)
+\end{itemize}
+
+The predicted class is the one with smaller distance:
+\begin{equation}
+\text{prediction} = \begin{cases}
+\text{HUMAN} & \text{if } d_H < d_A \\
+\text{AI-GENERATED} & \text{otherwise}
+\end{cases}
+\end{equation}
+
+This geometric approach provides both a classification decision and a measure of certainty, essential for practical deployment where uncertain predictions may require human review.
 

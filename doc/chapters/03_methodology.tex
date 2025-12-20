@@ -1,4 +1,27 @@
 \section{Methodology}
 
-% Write your methodology here
+\subsection{System Model}
 
+The detection system operates through a four-stage pipeline. Those are audio preprocessing, frequency domain transformation, feature extraction, and threshold-based classification. The core hypothesis is that human speech exhibits distinct phase relationships in the frequency domain that differ systematically from AI-generated audio. These differences arise from fundamental mechanisms that human speech originates from physical vocal cord vibrations and acoustic resonance, while AI-generated speech is synthesized digitally, potentially introducing artifacts in phase structure.
+
+\subsection{Signal Processing}
+
+The audio signal is first loaded and normalized to a consistent sampling rate and amplitude range. Stereo recordings are converted to mono by averaging channels. The preprocessed time-domain signal then undergoes Fast Fourier Transform (FFT), converting it from amplitude-over-time representation to amplitude-and-phase-over-frequency representation.
+
+The FFT produces a complex-valued vector where each element corresponds to a frequency component. The magnitude represents energy at that frequency, while the phase angle captures timing relationships. The system retains only positive frequency components, exploiting the symmetry property of real-valued signals. This frequency domain representation becomes the foundation for all subsequent analysis.
+
+\subsection{Feature Extraction}
+
+From the FFT output, the system extracts three key features characterizing the signal's geometric properties. First, phase coherence serves as the primary discriminative feature. They are used for quantify how consistently phase transitions across adjacent frequency bins. The computation analyzes phase values in sliding windows across the spectrum. High coherence indicates regular phase transitions typical of human speech. On the other hand, low coherence suggests random or artificial patterns common in nonhuman speech.
+
+Second, phase velocity measures the rate of phase change across frequency. Human speech typically exhibits smoother phase curves due to continuous physical sound production, while AI-generated speech may show abrupt transitions.
+
+Third, spectral entropy quantifies energy distribution across frequencies. Low entropy indicates concentration in specific bands, while high entropy suggests uniform distribution.
+
+\subsection{Classification Strategy}
+
+The classification employs a geometric threshold-based approach rather than machine learning. Before classification, the system computes reference statistics from known human and AI-generated speech samples. For each dataset, phase coherence values are extracted from multiple files, and statistical measures (mean and standard deviation) are computed. The decision threshold is established at the midpoint between the human and AI mean phase coherence values.
+
+For a test audio sample, the system extracts its phase coherence and applies a simple decision rule. If phase coherence exceeds the threshold, it is classified as human. Otherwise, it is classified as nonhuman. To quantify confidence, the system computes normalized geometric distances from the test sample to each class reference, similar to Mahalanobis distance. The distance to each class measures how many standard deviations the test sample deviates from that class's mean. Confidence reflects how much closer the sample is to its predicted class compared to the alternative.
+
+This threshold-based strategy offers immediate interpretability with a clear decision boundary, minimal calibration requirements, and avoidance of overfitting risks. The approach prioritizes mathematical transparency and geometric reasoning over complex learned parameters, making the classification process fully explainable through linear algebra principles.
