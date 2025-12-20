@@ -1,4 +1,85 @@
 \section{Implementation}
 
-% Write your results here
+\subsection{Signal Processing}
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{img/code_load_wav.png}}
+\caption{Loading Audio Files}
+\small \centering (Source: Author)
+\label{fig}
+\end{figure}
+First, audio file input was handled by first detecting the file extension. For WAV files, it uses scipy.io.wavfile.read to load the audio data and metadata, while MP3 files are loaded using the librosa library. The method then applies preprocessing steps. The signal is normalized to a floating-point range of [-1, 1]. 
 
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{img/code_compute_features.png}}
+\caption{Computing Mathematical Features of Audio}
+\small \centering (Source: Author)
+\label{fig}
+\end{figure}
+There is a part of the code to transform the time-domain signal into the frequency domain using Fast Fourier Transform (FFT) via scipy.fftpack.fft. All results—complex coefficients, magnitude, phase, and frequency—are organized into a dictionary for downstream feature calculations.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{img/code_compute_after_features.png}}
+\caption{Computing Phase Coherence, Phase Velocity, and Spectral Entropy}
+\small \centering (Source: Author)
+\label{fig}
+\end{figure}
+Spectral coherence is computed using a sliding window approach. The method returns both the overall coherence as the mean of all window coherences and an array of per-window values for diagnostic purposes. Next, the the smoothness of phase is quantified by computing the firt-order difference between adjacent phase. Last, there exists a part for extracting L2 norm, then normalize the magnitude vector using it. By using entropy formula, in the end, three metrics are returned in a dictionary. Extraction of all features from a file need to be executed for a complete information gathering.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{img/code_extract.png}}
+\caption{Extraction}
+\small \centering (Source: Author)
+\label{fig}
+\end{figure}
+
+\newpage
+\subsection{Reference Statistics}
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{img/code_get_wav.png}}
+\caption{Obtaining WAV Files}
+\small \centering (Source: Author)
+\label{fig}
+\end{figure}
+All audio files inside a certain directory are recursively searched by using glob patterns to find files matching *.wav and *.mp3. The method returns a sorted list of Path objects representing all discovered audio files.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{img/code_compute_statistics.png}}
+\caption{Computing Statistics}
+\small \centering (Source: Author)
+\label{fig}
+\end{figure}
+Baseline statistics must be computed to process human and nonhuman datasets. After processing all files, the method computes aggregate statistics for features such as mean, standard deviation, minimum, and maximum values. Then, the decision threshold is calculated.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{img/code_save_load.png}}
+\caption{Computing and Saving Reference Statistics}
+\small \centering (Source: Author)
+\label{fig}
+\end{figure}
+The rest of the code is used to save and load the statistics. When the application is first started, the data will get computed by the functions there.
+
+\subsection{Detector}
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{img/code_geo_distance.png}}
+\caption{Computing Geometric Distance}
+\small \centering (Source: Author)
+\label{fig}
+\end{figure}
+Geometric distance calculation is used for confidence classification. It is derived from the formula mentioned in the theoretical framework. It handles errors and also division by zero.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{img/code_predict.png}}
+\caption{Predicting results}
+\small \centering (Source: Author)
+\label{fig}
+\end{figure}
+Prediction performs the main classification task.  The method applies pre-computed threshold to classify whether the audio is human or nonhuman. It calculates the confidence score via this data. We used the help of \text{predict\_batch} to predict multiple audio files. 
+
+\subsection{Application}
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{img/code_app.png}}
+\caption{Predicting results}
+\small \centering (Source: Author)
+\label{fig}
+\end{figure}
+The Flask web application serves as the user interface for the deepfake detection system. When initializing detector, system automatically checks for the existence of reference statistics and computes them from the training datasets if unavailable, ensuring the system operates well on first launch. Upon receiving a file, the endpoint validates the file format, saves it temporarily to disk, invokes the deepfake detector to perform classification, and returns a JSON response containing the prediction label (human or AI-generated), confidence score, and detailed spectral metrics including phase coherence, geometric distances to both classes, phase velocity, spectral entropy, and L2 norm. Additional endpoints provide system status checks and access to reference statistics for diagnostic purposes.
