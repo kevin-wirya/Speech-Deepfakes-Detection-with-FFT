@@ -1,8 +1,8 @@
 function Header() {
   return (
     <header>
-      <h1>🎵 Audio Deepfake Detector</h1>
-      <p className="subtitle">AI-powered analysis using FFT Phase Geometry & Complex Linear Algebra</p>
+      <h1>🎵 Speech Deepfakes Detector</h1>
+      <p className="subtitle">Speech Deepfakes Detection with FFT using Complex Linear Algebra</p>
     </header>
   );
 }
