@@ -23,8 +23,14 @@ src/
     └── vite.config.js
 
 data/
-├── human/      # Human speech samples
-└── nonhuman/   # AI-generated samples
+├── human/      # Human speech training datasets
+└── nonhuman/   # AI-generated training datasets
+
+test/
+├── human/            # Human speech test cases
+├── nonhuman-sim/     # AI-generated test cases (speed)
+├── nonhuman-stab/    # AI-generated test cases (stability)
+└── nonhuman-sim/    # AI-generated test cases (similarity)
 ```
 
 ## Quick Start
@@ -47,7 +53,6 @@ Opens on http://localhost:5173
 
 - **Backend**: Flask, NumPy, SciPy, Librosa
 - **Frontend**: React 18, Vite, CSS
-- **Algorithm**: FFT Phase Geometry, Statistical Classification
 - **Audio**: WAV, MP3 support
 
 ## Installation
