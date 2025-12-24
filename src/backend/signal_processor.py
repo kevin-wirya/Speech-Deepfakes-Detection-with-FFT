@@ -134,7 +134,6 @@ class AudioSignalProcessor:
     def extract_all_features(self, filepath):
         # Load signal
         signal, sr = self.load_wav(filepath)
-        
         # Spectral features
         spectral = self.compute_spectral_features(signal, sr)
         # Phase coherence, velocity + Spectral entropy
