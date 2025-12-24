@@ -2,4 +2,7 @@
 !.gitignore
 !*.tex
 !*.pdf
+!*.jpeg
+!*.jpg
+!*.png
 !*/
