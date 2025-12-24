@@ -34,12 +34,25 @@ function ResultContainer({ result }) {
         </div>
       </div>
 
+      {/* Distance Group - Highlighted */}
+      <div className="distance-group">
+        <div className="distance-group-title">📏 Geometric Distances</div>
+        <div className="distance-cards">
+          <div className="distance-card human-card">
+            <div className="distance-card-label">Distance to Human</div>
+            <div className="distance-card-value">{details.distance_to_human.toFixed(6)}</div>
+          </div>
+          <div className="distance-card ai-card">
+            <div className="distance-card-label">Distance to AI</div>
+            <div className="distance-card-value">{details.distance_to_ai.toFixed(6)}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Metrics Section */}
       <div className="details">
-        <div className="details-title">📊 Technical Details</div>
+        <div className="details-title">📊 Feature Metrics</div>
         <DetailRow label="Phase Coherence" value={details.phase_coherence.toFixed(6)} />
-        <DetailRow label="Decision Threshold" value={details.threshold.toFixed(6)} />
-        <DetailRow label="Distance to Human" value={details.distance_to_human.toFixed(6)} />
-        <DetailRow label="Distance to AI" value={details.distance_to_ai.toFixed(6)} />
         <DetailRow label="Phase Velocity" value={details.phase_velocity.toFixed(6)} />
         <DetailRow label="Spectral Entropy" value={details.spectral_entropy.toFixed(6)} />
       </div>

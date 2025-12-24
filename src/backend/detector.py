@@ -1,6 +1,6 @@
 """
 Deepfake Detection Classifier
-Based on Geometric Distance and Threshold Decision Rules
+Based on Geometric Distance
 Output: Class label + confidence score based on geometric distance
 """
 
@@ -14,10 +14,17 @@ class DeepfakeDetector:
     def __init__(self, reference_stats_file='reference_stats.json'):
         self.processor = AudioSignalProcessor()
         self.stats = self._load_stats(reference_stats_file)
-        self.threshold = self.stats['decision_threshold']
-        # Extract statistics for distance computation
-        self.human_stats = self.stats['human']['phase_coherence']
-        self.ai_stats = self.stats['nonhuman']['phase_coherence']
+        # Extract statistics for all three metrics
+        self.human_stats = {
+            'phase_coherence': self.stats['human']['phase_coherence'],
+            'phase_velocity': self.stats['human']['phase_velocity'],
+            'spectral_entropy': self.stats['human']['spectral_entropy']
+        }
+        self.ai_stats = {
+            'phase_coherence': self.stats['nonhuman']['phase_coherence'],
+            'phase_velocity': self.stats['nonhuman']['phase_velocity'],
+            'spectral_entropy': self.stats['nonhuman']['spectral_entropy']
+        }
     
     def _load_stats(self, filepath):
         if not Path(filepath).exists():
@@ -29,18 +36,42 @@ class DeepfakeDetector:
         with open(filepath, 'r') as f:
             return json.load(f)
     
-    def _compute_geometric_distance(self, phase_coherence):
-        mu_h = self.human_stats['mean']
-        sigma_h = self.human_stats['std'] + 1e-6  # Avoid division by zero
+    def _compute_geometric_distance(self, features):
+        # Weights based on discriminative power
+        weights = {
+            'spectral_entropy': 0.80,    # Highest weight
+            'phase_coherence': 0.10,     # Medium weight
+            'phase_velocity': 0.10       # Lower weight
+        }
         
-        mu_ai = self.ai_stats['mean']
-        sigma_ai = self.ai_stats['std'] + 1e-6
+        distances_human = []
+        distances_ai = []
         
-        # Standardized distances
-        d_human = np.abs(phase_coherence - mu_h) / sigma_h
-        d_ai = np.abs(phase_coherence - mu_ai) / sigma_ai
+        metrics = ['phase_coherence', 'phase_velocity', 'spectral_entropy']
         
-        # Confidence computing
+        for metric in metrics:
+            value = features[metric]
+            
+            mu_h = self.human_stats[metric]['mean']
+            sigma_h = self.human_stats[metric]['std'] + 1e-6
+            
+            mu_ai = self.ai_stats[metric]['mean']
+            sigma_ai = self.ai_stats[metric]['std'] + 1e-6
+            
+            # Standardized distances per metric
+            d_h = np.abs(value - mu_h) / sigma_h
+            d_ai = np.abs(value - mu_ai) / sigma_ai
+            
+            # Apply weights
+            weight = weights[metric]
+            distances_human.append(weight * d_h)
+            distances_ai.append(weight * d_ai)
+        
+        # Weighted Euclidean distance
+        d_human = np.sqrt(np.sum(np.array(distances_human)**2))
+        d_ai = np.sqrt(np.sum(np.array(distances_ai)**2))
+        
+        # Confidence based on relative distances
         min_dist = min(d_human, d_ai)
         max_dist = max(d_human, d_ai)
         confidence = 1.0 - (min_dist / (max_dist + 1e-6))
@@ -50,22 +81,20 @@ class DeepfakeDetector:
     def predict(self, audio_filepath, verbose=False):
         # Extract features
         features = self.processor.extract_all_features(audio_filepath)
-        phase_coherence = features['phase_coherence']
-        
-        # Decision using threshold
-        if phase_coherence > self.threshold:
-            primary_prediction = 'human'
-        else:
-            primary_prediction = 'ai'
         
         # Compute geometric distances
-        d_h, d_ai, confidence = self._compute_geometric_distance(phase_coherence)
+        d_h, d_ai, confidence = self._compute_geometric_distance(features)
+        
+        # Decision using geometric distance
+        if d_ai < d_h:
+            primary_prediction = 'ai'
+        else:
+            primary_prediction = 'human'
         
         result = {
             'prediction': primary_prediction,
             'confidence': float(confidence),
-            'phase_coherence': float(phase_coherence),
-            'threshold': float(self.threshold),
+            'phase_coherence': float(features['phase_coherence']),
             'distance_to_human': float(d_h),
             'distance_to_ai': float(d_ai),
             'phase_velocity': float(features['phase_velocity']),
@@ -95,8 +124,7 @@ class DeepfakeDetector:
     def get_reference_statistics(self):
         return {
             'human': self.human_stats,
-            'ai': self.ai_stats,
-            'threshold': self.threshold
+            'ai': self.ai_stats
         }
 
 

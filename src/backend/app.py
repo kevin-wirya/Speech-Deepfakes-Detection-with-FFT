@@ -26,11 +26,9 @@ REFERENCE_STATS_FILE = 'reference_stats.json'
 detector = None
 
 def allowed_file(filename):
-    """Validate file extension."""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def initialize_detector():
-    """Initialize detector with reference statistics."""
     global detector
     
     # Check if reference stats exist
@@ -61,7 +59,6 @@ def initialize_detector():
 
 @app.route('/status', methods=['GET'])
 def status():
-    """Check API status and reference statistics."""
     if detector is None:
         return jsonify({
             'status': 'not_ready',
@@ -73,15 +70,13 @@ def status():
         'status': 'ready',
         'reference_statistics': {
             'human_phase_coherence_mean': stats['human']['mean'],
-            'ai_phase_coherence_mean': stats['ai']['mean'],
-            'decision_threshold': stats['threshold']
+            'ai_phase_coherence_mean': stats['ai']['mean']
         }
     })
 
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    """Predict if uploaded audio is human or AI-generated."""
     # Check if detector is initialized
     if detector is None:
         return jsonify({
@@ -131,7 +126,6 @@ def predict():
             'confidence': result['confidence'],
             'details': {
                 'phase_coherence': result['phase_coherence'],
-                'threshold': result['threshold'],
                 'distance_to_human': result['distance_to_human'],
                 'distance_to_ai': result['distance_to_ai'],
                 'phase_velocity': result['phase_velocity'],
@@ -149,7 +143,6 @@ def predict():
 
 @app.route('/stats', methods=['GET'])
 def get_stats():
-    """Get reference statistics."""
     if detector is None:
         return jsonify({
             'error': 'Detector not initialized'
@@ -161,7 +154,6 @@ def get_stats():
 
 @app.errorhandler(404)
 def not_found(error):
-    """Handle 404 errors."""
     return jsonify({
         'error': 'Not found'
     }), 404
@@ -169,7 +161,6 @@ def not_found(error):
 
 @app.errorhandler(500)
 def internal_error(error):
-    """Handle 500 errors."""
     return jsonify({
         'error': 'Internal server error'
     }), 500

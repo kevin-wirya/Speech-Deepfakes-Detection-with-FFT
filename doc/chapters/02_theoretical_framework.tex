@@ -212,19 +212,7 @@ In our framework, audio samples form clusters in the complex feature space. Let 
 \boldsymbol{\mu}_H = \frac{1}{M}\sum_{i=1}^{M} \mathbf{h}_i
 \end{equation}
 
-Similarly, AI-generated samples form a cluster $\mathcal{A}$ with centroid $\boldsymbol{\mu}_A$. The optimal decision boundary lies at the midpoint between centroids:
-\begin{equation}
-\tau = \frac{\boldsymbol{\mu}_H + \boldsymbol{\mu}_A}{2}
-\end{equation}
-
-For a test sample with phase coherence $C$, the classification rule is:
-\begin{equation}
-\text{decision}(C) = \begin{cases}
-\text{HUMAN} & \text{if } C > \tau \\
-\text{AI-GENERATED} & \text{if } C \leq \tau
-\end{cases}
-\end{equation}
-where $\tau$ is the optimal threshold computed from the training data statistics.
+Similarly, AI-generated samples form a cluster $\mathcal{A}$ with centroid $\boldsymbol{\mu}_A$. 
 
 \subsection{Mahalanobis-Like Distance and Confidence Estimation}
 

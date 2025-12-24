@@ -32,7 +32,6 @@ Spectral coherence is computed using a sliding window approach. The method retur
 \label{fig}
 \end{figure}
 
-\newpage
 \subsection{Reference Statistics}
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=8cm]{img/code_get_wav.png}}
@@ -48,7 +47,7 @@ All audio files inside a certain directory are recursively searched by using glo
 \small \centering (Source: Author)
 \label{fig}
 \end{figure}
-Baseline statistics must be computed to process human and nonhuman datasets. After processing all files, the method computes aggregate statistics for features such as mean, standard deviation, minimum, and maximum values. Then, the decision threshold is calculated.
+Baseline statistics must be computed to process human and nonhuman datasets. After processing all files, the method computes aggregate statistics for features such as mean, standard deviation, minimum, and maximum values. 
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=8cm]{img/code_save_load.png}}
@@ -65,20 +64,20 @@ The rest of the code is used to save and load the statistics. When the applicati
 \small \centering (Source: Author)
 \label{fig}
 \end{figure}
-Geometric distance calculation is used for confidence classification. It is derived from the formula mentioned in the theoretical framework. It handles errors and also division by zero.
+Geometric distance calculation is used for confidence classification. It is derived from the formula mentioned in the theoretical framework. It handles errors and also division by zero. In addition, we use weights approach to compute the distance in order to maximize the usage of all three metrices.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=8cm]{img/code_predict.png}}
-\caption{Predicting results}
+\caption{Classification Based on Geometric Distance}
 \small \centering (Source: Author)
 \label{fig}
 \end{figure}
-Prediction performs the main classification task.  The method applies pre-computed threshold to classify whether the audio is human or nonhuman. It calculates the confidence score via this data. We used the help of \text{predict\_batch} to predict multiple audio files. 
+Prediction performs the main classification task.  The method applies computed geometric distance to human and to AI to classify whether the audio is human or nonhuman. It calculates the confidence score via this data. We used the help of an additional function to predict multiple audio files. 
 
 \subsection{Application}
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=8cm]{img/code_app.png}}
-\caption{Predicting results}
+\caption{Application System}
 \small \centering (Source: Author)
 \label{fig}
 \end{figure}

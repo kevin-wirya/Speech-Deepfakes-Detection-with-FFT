@@ -74,37 +74,43 @@ function App() {
   return (
     <>
       <ParticleBackground />
-      <div className="container">
-        <Header />
-        
-        {audioUrl && <AudioPlayer audioUrl={audioUrl} />}
-        
-        <UploadArea 
-          onFileSelect={handleFileSelect}
-          hasFile={!!selectedFile}
-        />
-        
-        {selectedFile && (
-          <div className="file-info visible">
-            <div className="file-name">
-              📁 <strong>{selectedFile.name}</strong>
+      <div className={`app-wrapper ${result ? 'has-result' : ''}`}>
+        <div className="container left-panel">
+          <Header />
+          
+          {audioUrl && <AudioPlayer audioUrl={audioUrl} />}
+          
+          <UploadArea 
+            onFileSelect={handleFileSelect}
+            hasFile={!!selectedFile}
+          />
+          
+          {selectedFile && (
+            <div className="file-info visible">
+              <div className="file-name">
+                📁 <strong>{selectedFile.name}</strong>
+              </div>
+              <div className="file-size">
+                Size: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+              </div>
             </div>
-            <div className="file-size">
-              Size: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-            </div>
+          )}
+          
+          {status.message && <StatusMessage status={status} />}
+          
+          <ButtonGroup 
+            onPredict={handlePredict}
+            onClear={handleClear}
+            isAnalyzing={isAnalyzing}
+            hasFile={!!selectedFile}
+          />
+        </div>
+        
+        {result && (
+          <div className="container right-panel">
+            <ResultContainer result={result} />
           </div>
         )}
-        
-        {status.message && <StatusMessage status={status} />}
-        
-        <ButtonGroup 
-          onPredict={handlePredict}
-          onClear={handleClear}
-          isAnalyzing={isAnalyzing}
-          hasFile={!!selectedFile}
-        />
-        
-        {result && <ResultContainer result={result} />}
       </div>
     </>
   );

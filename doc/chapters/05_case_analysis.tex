@@ -1,4 +1,105 @@
 \section{Case Analysis}
 
-% Write your discussion here
+This case analysis evaluates the robustness of the detection system through testing of both human and nonhuman audio samples. The human samples are sourced from real people, while the nonhuman samples sourced from \textbf{Elevenlabs}. The author picked Elevenlabs since it let user to vary the components of the generated audio. The nonhuman sample set comprises three distinct categories speed, stability, and similarity. By introducing controlled variations, we isolate the individual factors that influence detection performance. This  approach allows us to understand not only the system's ability to distinguish human from AI-generated audio under ideal conditions, but also its resilience to common variations that AI systems might employ to evade detection. Consequently, this comprehensive evaluation reveals whether the detection metrics are robust indicators of audio authenticity or if they can be manipulated through algorithmic parameter adjustments.
 
+There are several variables inside the tables to represent each computed value. Variables, $C$, $V$, and $E$, consecutively, represent phase coherence, phase velocity, and spectral entropy. While $d_H$ and $d_{AI}$ represent the geometric distance to human and AI. As primary indicator, we use the abbreviation $Pred.$ for prediciton and $Cf$ for confidence rate in percentage.
+\subsection{Case 1: Human Samples}
+\begin{table}[htbp]
+\centering
+\tiny
+\caption{Detection Performance for Human Samples}
+\label{tab:detection_results}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{8}{|c|}{\textbf{Human Samples}} \\
+\hline
+\textbf{Sample} & $\mathbf{C}$ & $\mathbf{V}$ & $\mathbf{E}$ & $\mathbf{d_H}$ & $\mathbf{d_{AI}}$ & \textbf{Pred.} & \textbf{Cf (\%)} \\
+\hline
+H-1 & 0.496 & 1.390 & 10.008 & 0.804 & 1.324 & Human & 39.3\\
+H-2 & 0.468 & 1.309 & 10.015 & 0.796 & 1.317 & Human & 39.5\\
+H-3 & 0.631 & 0.973 & 9.988 & 0.895 & 1.380 & Human & 35.1\\
+H-4 & 0.704 & 0.842 & 9.911 & 1.006 & 1.480 & Human & 32.0\\
+H-5 & 0.694 & 0.799 & 10.348 & 0.673 & 1.057 & Human & 36.3\\
+H-6 & 0.365 & 1.603 & 10.257 & 0.550 & 1.062 & Human & 48.2\\
+H-7 & 0.246 & 1.838 & 9.460 & 1.324 & 1.894 & Human & 30.1\\
+H-8 & 0.249 & 1.984 &9.909 & 0.910 & 1.439 & Human & 36.8\\
+\hline
+\end{tabular}
+\end{table}
+
+The detection system correctly identified all eight human audio samples with 100\% accuracy. The phase coherence values range from 0.246 (H-7) to 0.704 (H-4), phase velocity spans from 0.799 (H-5) to 1.984 (H-8), and spectral entropy varies between 9.460 (H-7) and 10.348 (H-5). Across all samples, the geometric distance to human class ($d_H$) ranges from 0.550 to 1.324, while the distance to AI class ($d_{AI}$) ranges from 1.057 to 1.894. All samples consistently maintain $d_H < d_{AI}$, which results in correct human predictions. The confidence rates vary from 30.1\% (H-7) to 48.2\% (H-6). The data demonstrates that despite significant variations in individual feature values, the geometric distance metric successfully distinguishes human speech from AI-generated audio in all test cases.
+
+\subsection{Case 2: Nonhuman Samples with Speed Variation}
+\begin{table}[htbp]
+\tiny
+\centering
+\caption{Detection Performance for AI Samples with Speed Variation}
+\label{tab:detection_results}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{9}{|c|}{\textbf{Nonhuman Samples}} \\
+\hline
+\textbf{Sample} & Speed & $\mathbf{C}$ & $\mathbf{V}$ & $\mathbf{E}$ & $\mathbf{d_H}$ & $\mathbf{d_{AI}}$ & \textbf{Pred.} & \textbf{Cf (\%)} \\
+\hline
+AI-1 & 0.70x & 0.379 & 1.590 & 11.924 & 1.043 & 0.663 & AI & 36.5\\
+AI-2 & 0.80x & 0.430 & 1.506 & 11.899 & 1.023 & 0.639 & AI & 37.5\\
+AI-3 & 0.90x & 0.381 & 1.607 & 11.752 & 0.880 & 0.486 & AI & 44.8\\
+AI-4 & 1.00x & 0.421 & 1.612 & 11.673 & 0.806 & 0.405 & AI & 49.8\\
+AI-5 & 1.10x & 0.401 & 1.632 & 11.533 & 0.671 & 0.260 & AI & 61.2\\
+AI-6 & 1.20x & 0.379 & 1.697 & 11.380 & 0.526 & 0.115 & AI & 78.1\\
+\hline
+\end{tabular}
+\end{table}
+
+Using stability of 30 and similarity of 20, all six AI-generated samples with varying speed parameters were correctly classified as AI with 100\% accuracy. As speed increases from 0.70x to 1.20x, spectral entropy decreases from 11.924 to 11.380, and phase velocity increases from 1.590 to 1.697. Phase coherence fluctuates between 0.379 and 0.430 without a consistent trend. The geometric distance to human class ($d_H$) decreases from 1.043 to 0.526, and distance to AI class ($d_{AI}$) decreases from 0.663 to 0.115 as speed increases. The confidence rate shows a strong positive correlation with speed, rising from 36.5\% at 0.70x to 78.1\% at 1.20x. The data indicates that faster playback speeds produce samples that are more distinguishable as AI-generated, with the system achieving its highest confidence at 1.20x speed.
+
+\subsection{Case 3: Nonhuman Samples with Stability Variation}
+
+\begin{table}[htbp]
+\tiny
+\centering
+\caption{Detection Performance for AI Samples with Stability Variation}
+\label{tab:detection_results}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{9}{|c|}{\textbf{Human Samples}} \\
+\hline
+\textbf{Sample} & Stab. & $\mathbf{C}$ & $\mathbf{V}$ & $\mathbf{E}$ & $\mathbf{d_H}$ & $\mathbf{d_{AI}}$ & \textbf{Pred.} & \textbf{Cf (\%)} \\
+\hline
+AI-1 & 0 & 0.424 & 1.464 & 11.968 & 1.089 & 0.710 & AI & 34.8\\
+AI-2 & 20 & 0.390 & 1.575 & 11.871 & 0.993 & 0.608 & AI & 38.8\\
+AI-3 & 40 & 0.392 & 1.557 & 11.979 & 1.096 & 0.719 & AI & 34.4\\
+AI-4 & 60 & 0.438 & 1.478 & 11.811 & 0.939 & 0.548 & AI & 41.6\\
+AI-5 & 80 & 0.401 & 1.558 & 11.871 & 0.994 & 0.609 & AI & 38.8\\
+AI-6 & 100 & 0.399 & 1.594 & 11.917 & 1.037 & 0.656 & AI & 36.8\\
+\hline
+\end{tabular}
+\end{table}
+
+Using normal speed and similarity of 20, all six AI-generated samples with stability parameters ranging from 0 to 100 were correctly classified as AI with 100\% accuracy. The phase coherence values range from 0.390 to 0.438, phase velocity varies between 1.464 and 1.594, and spectral entropy spans from 11.811 to 11.979. The geometric distance to human class ($d_H$) ranges from 0.939 to 1.096, while distance to AI class ($d_{AI}$) ranges from 0.548 to 0.719. Confidence rates fluctuate between 34.4\% (stability 40) and 41.6\% (stability 60), showing no clear monotonic relationship with the stability parameter. Sample AI-4 with stability 60 achieves the highest confidence at 41.6\%, while samples AI-1 and AI-3 show the lowest confidence at 34.8\% and 34.4\% respectively. The data reveals that stability variations do not significantly impact the detection system's ability to classify AI audio, with all samples maintaining $d_{AI} < d_H$ and relatively consistent confidence levels.
+
+\newpage
+\subsection{Case 4: Nonhuman Samples with Similarity Variation}
+
+\begin{table}[htbp]
+\tiny
+\centering
+\caption{Detection Performance for AI Samples with Similarity Variation}
+\label{tab:detection_results}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{9}{|c|}{\textbf{Human Samples}} \\
+\hline
+\textbf{Sample} & Sim. & $\mathbf{C}$ & $\mathbf{V}$ & $\mathbf{E}$ & $\mathbf{d_H}$ & $\mathbf{d_{AI}}$ & \textbf{Pred.} & \textbf{Cf (\%)} \\
+\hline
+AI-1 & 0 & 0.395 & 1.609 & 11.912 & 1.033 & 0.651 & AI & 37.0\\
+AI-2 & 20 & 0.392 & 1.657 & 11.909 & 1.030 & 0.648 & AI & 37.1\\
+AI-3 & 40 & 0.398 & 1.610 & 11.892 & 1.014 & 0.630 & AI & 37.8\\
+AI-4 & 60 & 0.399 & 1.575 & 11.892 & 1.014 & 0.630 & AI & 37.9\\
+AI-5 & 80 & 0.390 & 1.624 & 11.866 & 0.988 & 0.603 & AI & 39.0\\
+AI-6 & 100 & 0.393 & 1.638 & 11.926 & 1.046 & 0.665 & AI & 36.4\\
+\hline
+\end{tabular}
+\end{table}
+
+Using normal speed and stability of 30, all six AI-generated samples with similarity parameters ranging from 0 to 100 were correctly classified as AI with 100\% accuracy. Phase coherence values remain narrow between 0.390 and 0.399, phase velocity ranges from 1.575 to 1.657, and spectral entropy varies minimally from 11.866 to 11.926. The geometric distance to human class ($d_H$) ranges from 0.988 to 1.046, and distance to AI class ($d_{AI}$) ranges from 0.603 to 0.665. Confidence rates show minimal variation, spanning from 36.4\% (similarity 100) to 39.0\% (similarity 80), with most samples clustered around 37\%. The maximum confidence difference across all similarity levels is only 2.6 percentage points. The data demonstrates that similarity parameter adjustments have negligible impact on the detection system's performance, with all samples exhibiting nearly identical feature characteristics and consistently maintaining $d_{AI} < d_H$.

@@ -89,8 +89,6 @@ class ReferenceStatisticsComputer:
                 'phase_coherence': {
                     'mean': float(np.mean(coherences)) if len(coherences) > 0 else 0.0,
                     'std': float(np.std(coherences)) if len(coherences) > 0 else 0.0,
-                    'min': float(np.min(coherences)) if len(coherences) > 0 else 0.0,
-                    'max': float(np.max(coherences)) if len(coherences) > 0 else 0.0,
                     'count': len(coherences)
                 },
                 'phase_velocity': {
@@ -110,32 +108,12 @@ class ReferenceStatisticsComputer:
                 print(f"  Phase Coherence:")
                 print(f"    μ = {result[label]['phase_coherence']['mean']:.4f}")
                 print(f"    σ = {result[label]['phase_coherence']['std']:.4f}")
-                print(f"    range = [{result[label]['phase_coherence']['min']:.4f}, {result[label]['phase_coherence']['max']:.4f}]")
                 print(f"  Phase Velocity:")
                 print(f"    μ = {result[label]['phase_velocity']['mean']:.4f}")
                 print(f"    σ = {result[label]['phase_velocity']['std']:.4f}")
                 print(f"  Spectral Entropy:")
                 print(f"    μ = {result[label]['spectral_entropy']['mean']:.4f}")
                 print(f"    σ = {result[label]['spectral_entropy']['std']:.4f}")
-        
-        # Compute decision threshold
-        mu_h = result['human']['phase_coherence']['mean']
-        mu_ai = result['nonhuman']['phase_coherence']['mean']
-        threshold = (mu_h + mu_ai) / 2.0
-        
-        result['decision_threshold'] = float(threshold)
-        
-        if verbose:
-            print(f"\n" + "=" * 70)
-            print(f"DECISION THRESHOLD (Midpoint Rule)")
-            print(f"=" * 70)
-            print(f"  μ(human) = {mu_h:.4f}")
-            print(f"  μ(AI)    = {mu_ai:.4f}")
-            print(f"  Threshold θ = {threshold:.4f}")
-            print(f"\nDecision Rule:")
-            print(f"  if C(x) > θ -> HUMAN")
-            print(f"  if C(x) ≤ θ -> AI-GENERATED")
-            print("=" * 70 + "\n")
         
         return result
     
