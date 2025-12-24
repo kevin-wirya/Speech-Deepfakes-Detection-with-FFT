@@ -1,4 +1,4 @@
-# Audio Deepfake Detection System
+# 🕵🏻 Audio Deepfake Detection System
 
 ![Conan](doc/img/conan.jpeg)
 
