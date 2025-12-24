@@ -7,6 +7,13 @@ Speech Deepfakes Detection Website with FFT using Complex Linear Algebra
 ## Project Structure
 
 ```
+
+doc/
+├── main.tex     # Main LaTeX document (root file)
+├── chapters/ # Chapter content files
+├── img/ # Images and figures
+└── main.pdf # Compiled paper in pdf format
+
 src/
 ├── backend/           # Python Flask API
 │   ├── app.py
