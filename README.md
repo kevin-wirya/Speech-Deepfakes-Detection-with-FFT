@@ -9,10 +9,10 @@ Speech Deepfakes Detection Website with FFT using Complex Linear Algebra
 ```
 
 doc/
-├── main.tex     # Main LaTeX document (root file)
-├── chapters/ # Chapter content files
-├── img/ # Images and figures
-└── main.pdf # Compiled paper in pdf format
+├── main.tex      # Main LaTeX document (root file)
+├── chapters/     # Chapter content files
+├── img/          # Images and figures
+└── main.pdf      # Compiled paper in pdf format
 
 src/
 ├── backend/           # Python Flask API
@@ -37,7 +37,7 @@ test/
 ├── human/            # Human speech test cases
 ├── nonhuman-sim/     # AI-generated test cases (speed)
 ├── nonhuman-stab/    # AI-generated test cases (stability)
-└── nonhuman-sim/    # AI-generated test cases (similarity)
+└── nonhuman-sim/     # AI-generated test cases (similarity)
 ```
 
 ## Quick Start
