@@ -1,0 +1,259 @@
+{
+  "model_version": "fft-geometry-v1",
+  "data_dir": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test",
+  "evaluation_note": "Benchmark on the supplied test directory; not a speaker-disjoint or generator-disjoint production estimate.",
+  "evaluated_files": 26,
+  "failed_files": 0,
+  "metrics": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "false_positive_rate": 0.0,
+    "false_negative_rate": 0.0,
+    "confusion_matrix": {
+      "true_negative": 8,
+      "false_positive": 0,
+      "false_negative": 0,
+      "true_positive": 18
+    },
+    "roc_auc": 1.0,
+    "pr_auc": 1.0
+  },
+  "latency_ms": {
+    "p50": 4110.11,
+    "p95": 6029.18
+  },
+  "condition_metrics": {
+    "human": {
+      "files": 8,
+      "accuracy": 1.0,
+      "recall_ai": 0.0
+    },
+    "nonhuman-sim": {
+      "files": 6,
+      "accuracy": 1.0,
+      "recall_ai": 1.0
+    },
+    "nonhuman-speed": {
+      "files": 6,
+      "accuracy": 1.0,
+      "recall_ai": 1.0
+    },
+    "nonhuman-stab": {
+      "files": 6,
+      "accuracy": 1.0,
+      "recall_ai": 1.0
+    }
+  },
+  "files": [
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_1.mp3",
+      "condition": "human",
+      "label": 0,
+      "prediction": 0,
+      "score_ai": 0.377775,
+      "latency_ms": 2023.15
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_2.mp3",
+      "condition": "human",
+      "label": 0,
+      "prediction": 0,
+      "score_ai": 0.376816,
+      "latency_ms": 1099.46
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_3.mp3",
+      "condition": "human",
+      "label": 0,
+      "prediction": 0,
+      "score_ai": 0.393405,
+      "latency_ms": 1978.67
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_4.mp3",
+      "condition": "human",
+      "label": 0,
+      "prediction": 0,
+      "score_ai": 0.404633,
+      "latency_ms": 1124.92
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_5.mp3",
+      "condition": "human",
+      "label": 0,
+      "prediction": 0,
+      "score_ai": 0.389079,
+      "latency_ms": 1839.2
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_6.mp3",
+      "condition": "human",
+      "label": 0,
+      "prediction": 0,
+      "score_ai": 0.341361,
+      "latency_ms": 1206.5
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_7.mp3",
+      "condition": "human",
+      "label": 0,
+      "prediction": 0,
+      "score_ai": 0.411431,
+      "latency_ms": 1154.78
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_8.mp3",
+      "condition": "human",
+      "label": 0,
+      "prediction": 0,
+      "score_ai": 0.387414,
+      "latency_ms": 1797.15
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-sim\\ElevenLabs_2025-12-24T06_08_16_Alice - Clear, Engaging Educator_pre_sp100_s30_sb0_se0_b_m2.mp3",
+      "condition": "nonhuman-sim",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.614646,
+      "latency_ms": 4158.39
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-sim\\ElevenLabs_2025-12-24T06_09_07_Alice - Clear, Engaging Educator_pre_sp100_s30_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-sim",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.613694,
+      "latency_ms": 4092.23
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-sim\\ElevenLabs_2025-12-24T06_09_47_Alice - Clear, Engaging Educator_pre_sp100_s30_sb40_se0_b_m2.mp3",
+      "condition": "nonhuman-sim",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.616652,
+      "latency_ms": 4104.7
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-sim\\ElevenLabs_2025-12-24T06_11_19_Alice - Clear, Engaging Educator_pre_sp100_s30_sb60_se0_b_m2.mp3",
+      "condition": "nonhuman-sim",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.616743,
+      "latency_ms": 4060.44
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-sim\\ElevenLabs_2025-12-24T06_11_30_Alice - Clear, Engaging Educator_pre_sp100_s30_sb80_se0_b_m2.mp3",
+      "condition": "nonhuman-sim",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.62104,
+      "latency_ms": 4115.52
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-sim\\ElevenLabs_2025-12-24T06_12_52_Alice - Clear, Engaging Educator_pre_sp100_s30_sb100_se0_b_m2.mp3",
+      "condition": "nonhuman-sim",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.611205,
+      "latency_ms": 3998.76
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-speed\\ElevenLabs_2025-12-23T13_57_10_Adam - Dominant, Firm_pre_sp70_s30_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-speed",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.611502,
+      "latency_ms": 6325.2
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-speed\\ElevenLabs_2025-12-23T14_00_44_Adam - Dominant, Firm_pre_sp80_s30_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-speed",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.615569,
+      "latency_ms": 5787.4
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-speed\\ElevenLabs_2025-12-23T14_02_40_Adam - Dominant, Firm_pre_sp90_s30_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-speed",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.644213,
+      "latency_ms": 5257.85
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-speed\\ElevenLabs_2025-12-23T14_04_35_Adam - Dominant, Firm_pre_sp100_s30_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-speed",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.665558,
+      "latency_ms": 6109.77
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-speed\\ElevenLabs_2025-12-23T14_11_27_Adam - Dominant, Firm_pre_sp110_s30_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-speed",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.720524,
+      "latency_ms": 4372.12
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-speed\\ElevenLabs_2025-12-23T14_13_24_Adam - Dominant, Firm_pre_sp120_s30_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-speed",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.820308,
+      "latency_ms": 3513.71
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-stab\\ElevenLabs_2025-12-24T04_50_55_Bill - Wise, Mature, Balanced_pre_sp100_s0_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-stab",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.605172,
+      "latency_ms": 5059.23
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-stab\\ElevenLabs_2025-12-24T04_52_35_Bill - Wise, Mature, Balanced_pre_sp100_s20_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-stab",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.620309,
+      "latency_ms": 4885.71
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-stab\\ElevenLabs_2025-12-24T04_56_37_Bill - Wise, Mature, Balanced_pre_sp100_s40_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-stab",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.6038,
+      "latency_ms": 5401.82
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-stab\\ElevenLabs_2025-12-24T04_58_29_Bill - Wise, Mature, Balanced_pre_sp100_s60_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-stab",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.63143,
+      "latency_ms": 4945.79
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-stab\\ElevenLabs_2025-12-24T05_03_16_Bill - Wise, Mature, Balanced_pre_sp100_s80_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-stab",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.620227,
+      "latency_ms": 5434.0
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\nonhuman-stab\\ElevenLabs_2025-12-24T05_03_52_Bill - Wise, Mature, Balanced_pre_sp100_s100_sb20_se0_b_m2.mp3",
+      "condition": "nonhuman-stab",
+      "label": 1,
+      "prediction": 1,
+      "score_ai": 0.612703,
+      "latency_ms": 5183.59
+    }
+  ]
+}

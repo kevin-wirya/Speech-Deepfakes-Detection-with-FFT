@@ -42,19 +42,54 @@ test/
 
 ## Quick Start
 
+### Docker Compose (recommended)
+
+Requirements: Docker Desktop with Compose enabled.
+
+From the project root:
+
+```bash
+docker compose up --build
+```
+
+Open http://localhost:5173. The stack contains the Flask API, detector initialization, production frontend build, and Nginx API proxy. Stop it with `Ctrl+C`; remove the containers with:
+
+```bash
+docker compose down
+```
+
+### Local development
+
 ### Backend
+
 ```bash
 cd src/backend
 python quickstart.py
 ```
 
 ### Frontend
+
 ```bash
 cd src/frontend
 npm install
 npm run dev
 ```
+
 Opens on http://localhost:5173
+
+### Deploy frontend to Vercel
+
+Vercel digunakan untuk frontend Vite. Backend Flask tetap dijalankan sebagai service/container terpisah karena membutuhkan NumPy, SciPy, librosa, FFmpeg, reference statistics, dan dataset test.
+
+1. Push repository ini ke GitHub.
+2. Di Vercel pilih **Add New Project** -> **Import Git Repository**.
+3. Pilih repository GitHub ini dan set **Root Directory** ke `src/frontend`.
+4. Pastikan Framework Preset adalah **Vite**.
+5. Set environment variable `VITE_API_BASE_URL` ke URL public backend, misalnya `https://your-backend.example.com`.
+6. Pada backend, set `ALLOWED_ORIGINS` ke URL Vercel, misalnya `https://your-project.vercel.app`.
+7. Deploy. Push berikutnya ke branch production akan memicu deployment otomatis.
+
+Konfigurasi Vercel tersedia di `src/frontend/vercel.json`, dan template variable tersedia di `src/frontend/.env.example`.
 
 ## Technology Stack
 
@@ -72,6 +107,7 @@ pip install -r requirements.txt
 ## Usage
 
 ### Web Interface
+
 1. Open http://localhost:5173
 2. Upload an audio file (WAV or MP3)
 3. Click "Analyze Audio"

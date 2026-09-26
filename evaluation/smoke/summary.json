@@ -1,0 +1,99 @@
+{
+  "model_version": "fft-geometry-v1",
+  "data_dir": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human",
+  "evaluated_files": 8,
+  "failed_files": 0,
+  "metrics": {
+    "accuracy": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "false_positive_rate": null,
+    "false_negative_rate": 1.0,
+    "confusion_matrix": {
+      "true_negative": 0,
+      "false_positive": 0,
+      "false_negative": 8,
+      "true_positive": 0
+    },
+    "roc_auc": null,
+    "pr_auc": null
+  },
+  "latency_ms": {
+    "p50": 2081.82,
+    "p95": 2960.67
+  },
+  "condition_metrics": {
+    "default": {
+      "files": 8,
+      "accuracy": 0.0,
+      "recall": 0.0
+    }
+  },
+  "files": [
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_1.mp3",
+      "condition": "default",
+      "label": 1,
+      "prediction": 0,
+      "score_ai": 0.377775,
+      "latency_ms": 3229.86
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_2.mp3",
+      "condition": "default",
+      "label": 1,
+      "prediction": 0,
+      "score_ai": 0.376816,
+      "latency_ms": 2460.74
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_3.mp3",
+      "condition": "default",
+      "label": 1,
+      "prediction": 0,
+      "score_ai": 0.393405,
+      "latency_ms": 2153.87
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_4.mp3",
+      "condition": "default",
+      "label": 1,
+      "prediction": 0,
+      "score_ai": 0.404633,
+      "latency_ms": 1144.95
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_5.mp3",
+      "condition": "default",
+      "label": 1,
+      "prediction": 0,
+      "score_ai": 0.389079,
+      "latency_ms": 2009.77
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_6.mp3",
+      "condition": "default",
+      "label": 1,
+      "prediction": 0,
+      "score_ai": 0.341361,
+      "latency_ms": 1661.96
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_7.mp3",
+      "condition": "default",
+      "label": 1,
+      "prediction": 0,
+      "score_ai": 0.411431,
+      "latency_ms": 1065.17
+    },
+    {
+      "file": "D:\\Project\\Speech-Deepfakes-Detection-with-FFT\\test\\human\\human_8.mp3",
+      "condition": "default",
+      "label": 1,
+      "prediction": 0,
+      "score_ai": 0.387414,
+      "latency_ms": 2165.21
+    }
+  ]
+}

@@ -24,6 +24,7 @@ python quickstart.py
 ```
 
 This will:
+
 1. Check datasets exist
 2. Install dependencies
 3. Compute reference statistics (if needed)
@@ -38,9 +39,22 @@ This will:
 ## With Frontend
 
 Start this backend, then start the React frontend in another terminal:
+
 ```bash
 cd ../src/frontend
 npm run dev
 ```
 
 Frontend will be on http://localhost:5173
+
+## Evaluation
+
+Run the reproducible evaluator from this directory:
+
+```bash
+python evaluate.py --data-dir ../../test --reference-stats reference_stats.json --output-dir ../../evaluation
+```
+
+It writes `summary.json`, `summary.md`, and `confusion_matrix.png`. The current detector score is a relative geometric distance score, not a calibrated probability. The API can return `human_likely`, `ai_likely`, or `uncertain` when the two class distances are too close.
+
+The evaluation report describes performance on the supplied test directory. It should not be presented as a speaker-disjoint or generator-disjoint production estimate until those splits are added.

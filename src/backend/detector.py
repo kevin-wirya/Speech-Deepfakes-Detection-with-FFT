@@ -46,6 +46,7 @@ class DeepfakeDetector:
         
         distances_human = []
         distances_ai = []
+        feature_evidence = []
         
         metrics = ['phase_coherence', 'phase_velocity', 'spectral_entropy']
         
@@ -66,6 +67,14 @@ class DeepfakeDetector:
             weight = weights[metric]
             distances_human.append(weight * d_h)
             distances_ai.append(weight * d_ai)
+            feature_evidence.append({
+                'feature': metric,
+                'value': float(value),
+                'human_distance': float(d_h),
+                'ai_distance': float(d_ai),
+                'weight': weight,
+                'closer_to': 'ai' if d_ai < d_h else 'human'
+            })
         
         # Weighted Euclidean distance
         d_human = np.sqrt(np.sum(np.array(distances_human)**2))
@@ -76,30 +85,35 @@ class DeepfakeDetector:
         max_dist = max(d_human, d_ai)
         confidence = 1.0 - (min_dist / (max_dist + 1e-6))
         
-        return d_human, d_ai, confidence
+        return d_human, d_ai, confidence, feature_evidence
     
     def predict(self, audio_filepath, verbose=False):
         # Extract features
         features = self.processor.extract_all_features(audio_filepath)
+        feature_values = [features[name] for name in ('phase_coherence', 'phase_velocity', 'spectral_entropy', 'spectral_l2_norm')]
+        if not np.isfinite(feature_values).all():
+            raise ValueError('Audio produced non-finite analysis features.')
         
         # Compute geometric distances
-        d_h, d_ai, confidence = self._compute_geometric_distance(features)
+        d_h, d_ai, confidence, feature_evidence = self._compute_geometric_distance(features)
         
         # Decision using geometric distance
-        if d_ai < d_h:
-            primary_prediction = 'ai'
-        else:
-            primary_prediction = 'human'
+        primary_prediction = 'ai' if d_ai < d_h else 'human'
+        decision = 'uncertain' if confidence < 0.20 else f'{primary_prediction}_likely'
         
         result = {
             'prediction': primary_prediction,
             'confidence': float(confidence),
+            'decision': decision,
+            'score_type': 'relative_distance_score',
+            'uncertainty': float(1.0 - confidence),
             'phase_coherence': float(features['phase_coherence']),
             'distance_to_human': float(d_h),
             'distance_to_ai': float(d_ai),
             'phase_velocity': float(features['phase_velocity']),
             'spectral_entropy': float(features['spectral_entropy']),
-            'spectral_l2_norm': float(features['spectral_l2_norm'])
+            'spectral_l2_norm': float(features['spectral_l2_norm']),
+            'feature_evidence': feature_evidence
         }
         
         return result

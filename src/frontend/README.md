@@ -11,6 +11,7 @@ Modern React-based web interface for the Audio Deepfake Detection System using m
 - **Audio Preview**: Listen to uploaded audio before analysis
 - **Detailed Metrics**: View technical metrics including phase coherence, distances, and spectral properties
 - **Drag & Drop Upload**: Intuitive file upload with drag-and-drop support
+- **Test Dataset Picker**: Select labeled WAV/MP3 samples directly from the repository `test/` folder
 
 ## Project Structure
 
@@ -89,7 +90,39 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 in your browser.
+From the `src/frontend` directory, `npm run dev` starts both the Flask backend and the Vite frontend concurrently. The application is available at http://localhost:5173. The test dataset picker is populated by the backend endpoint and uses the same preview and analysis flow as uploaded files.
+
+The combined command uses the existing backend quick-start flow with `--no-install`. Install backend dependencies once before running it:
+
+```bash
+cd ../backend
+python -m pip install -r requirements.txt
+cd ../frontend
+npm install
+npm run dev
+```
+
+To run only one service when debugging, use `npm run dev:frontend` or `npm run dev:backend`.
+
+## Docker Compose
+
+The recommended showcase command is from the project root:
+
+```bash
+docker compose up --build
+```
+
+Then open http://localhost:5173. Docker runs the Flask API and the production frontend together, with Nginx forwarding API requests to the backend container.
+
+## Vercel Deployment
+
+Push the repository to GitHub, then import it from Vercel. Set the Vercel project **Root Directory** to `src/frontend` and set:
+
+```text
+VITE_API_BASE_URL=https://your-public-backend.example.com
+```
+
+The Flask backend must be deployed separately. Set its `ALLOWED_ORIGINS` environment variable to the Vercel domain. The backend must also include `test/` if the test dataset picker is needed in the deployed demo.
 
 ## Building for Production
 

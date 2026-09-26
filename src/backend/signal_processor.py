@@ -46,11 +46,12 @@ class AudioSignalProcessor:
                 # Convert stereo to mono if needed
                 if len(signal.shape) > 1:
                     signal = np.mean(signal, axis=1)
-                # Normalize to [-1, 1]
-                if signal.dtype in [np.int16, np.int32]:
-                    signal = signal.astype(np.float32) / np.max(np.abs(signal))
-                else:
-                    signal = signal.astype(np.float32)
+                # Normalize to [-1, 1] while handling silent and unusual WAV files.
+                signal = signal.astype(np.float32)
+                peak = float(np.max(np.abs(signal))) if signal.size else 0.0
+                if peak > 0 and peak > 1.0:
+                    signal = signal / peak
+                signal = np.nan_to_num(signal, nan=0.0, posinf=0.0, neginf=0.0)
                 return signal, sr
             else:
                 raise ValueError(f"Unsupported file format: {file_ext}. Use WAV or MP3.")
@@ -58,6 +59,7 @@ class AudioSignalProcessor:
             raise ValueError(f"Error loading audio file: {str(e)}")
     
     def compute_spectral_features(self, signal, sr=None):
+        signal = np.nan_to_num(signal, nan=0.0, posinf=0.0, neginf=0.0)
         # Apply FFT
         X = fft(signal)
         # Keep only positive frequencies
@@ -109,11 +111,12 @@ class AudioSignalProcessor:
         phase_velocity = np.diff(phase)
         phase_velocity = np.angle(np.exp(1j * phase_velocity))
         # Mean absolute velocity / smoothness metric
-        velocity_smoothness = np.mean(np.abs(phase_velocity))
+        velocity_smoothness = np.mean(np.abs(phase_velocity)) if phase_velocity.size else 0.0
         
-        return velocity_smoothness
+        return float(np.nan_to_num(velocity_smoothness, nan=0.0, posinf=0.0, neginf=0.0))
     
     def compute_spectral_inner_products(self, magnitude):
+        magnitude = np.nan_to_num(magnitude, nan=0.0, posinf=0.0, neginf=0.0)
         # Euclidean norm of magnitude vector
         l2_norm = np.linalg.norm(magnitude, ord=2)
         # Normalized spectral shape (unit vector for cosine similarity)
@@ -123,12 +126,13 @@ class AudioSignalProcessor:
             spectral_shape = magnitude
 
         # Spectral entropy
-        prob = (magnitude + 1e-10) / (np.sum(magnitude) + 1e-10)
+        total_magnitude = float(np.sum(magnitude))
+        prob = (magnitude + 1e-10) / (total_magnitude + 1e-10)
         entropy = -np.sum(prob * np.log(prob))
         return {
             'l2_norm': l2_norm,
             'spectral_shape': spectral_shape,
-            'entropy': entropy
+            'entropy': float(np.nan_to_num(entropy, nan=0.0, posinf=0.0, neginf=0.0))
         }
     
     def extract_all_features(self, filepath):

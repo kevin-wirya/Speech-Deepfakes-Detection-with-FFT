@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Header from './components/Header';
 import UploadArea from './components/UploadArea';
 import AudioPlayer from './components/AudioPlayer';
@@ -6,6 +6,7 @@ import StatusMessage from './components/StatusMessage';
 import ButtonGroup from './components/ButtonGroup';
 import ResultContainer from './components/ResultContainer';
 import ParticleBackground from './components/ParticleBackground';
+import { apiUrl } from './lib/api';
 import './App.css';
 
 function App() {
@@ -14,31 +15,46 @@ function App() {
   const [status, setStatus] = useState({ message: '', type: '' });
   const [result, setResult] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const statusTimerRef = useRef(null);
+
+  useEffect(() => () => {
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    if (statusTimerRef.current) clearTimeout(statusTimerRef.current);
+  }, [audioUrl]);
+
+  const showTemporaryStatus = (message, type) => {
+    if (statusTimerRef.current) clearTimeout(statusTimerRef.current);
+    setStatus({ message, type });
+    statusTimerRef.current = setTimeout(() => {
+      setStatus({ message: '', type: '' });
+    }, 3000);
+  };
 
   const handleFileSelect = (file) => {
     setSelectedFile(file);
     const url = URL.createObjectURL(file);
     setAudioUrl(url);
     setResult(null);
-    setStatus({ message: '✅ File loaded successfully! You can listen to it above.', type: 'success' });
-    
-    setTimeout(() => {
-      if (status.type === 'success') setStatus({ message: '', type: '' });
-    }, 3000);
+    showTemporaryStatus('File loaded. Preview the audio before analysis.', 'success');
+  };
+
+  const handleInvalidFile = (message) => {
+    showTemporaryStatus(message, 'error');
   };
 
   const handlePredict = async () => {
     if (!selectedFile) return;
 
     setIsAnalyzing(true);
-    setStatus({ message: '🔬 Analyzing audio with FFT Phase Geometry...', type: 'loading' });
+    if (statusTimerRef.current) clearTimeout(statusTimerRef.current);
+    setStatus({ message: 'Analyzing audio with FFT Phase Geometry...', type: 'loading' });
     setResult(null);
 
     const formData = new FormData();
     formData.append('file', selectedFile);
 
     try {
-      const response = await fetch('/predict', {
+      const response = await fetch(apiUrl('/predict'), {
         method: 'POST',
         body: formData
       });
@@ -47,15 +63,12 @@ function App() {
 
       if (data.success) {
         setResult(data);
-        setStatus({ message: '✅ Analysis complete!', type: 'success' });
-        setTimeout(() => {
-          if (status.type === 'success') setStatus({ message: '', type: '' });
-        }, 3000);
+        showTemporaryStatus('Analysis complete.', 'success');
       } else {
-        setStatus({ message: `❌ Error: ${data.error}`, type: 'error' });
+        setStatus({ message: data.error || 'The audio could not be analyzed.', type: 'error' });
       }
     } catch (error) {
-      setStatus({ message: `❌ Network error: ${error.message}`, type: 'error' });
+      setStatus({ message: `Network error: ${error.message}`, type: 'error' });
     } finally {
       setIsAnalyzing(false);
     }
@@ -66,9 +79,7 @@ function App() {
     setAudioUrl(null);
     setResult(null);
     setStatus({ message: '', type: '' });
-    if (audioUrl) {
-      URL.revokeObjectURL(audioUrl);
-    }
+    if (statusTimerRef.current) clearTimeout(statusTimerRef.current);
   };
 
   return (
@@ -83,6 +94,7 @@ function App() {
           <UploadArea 
             onFileSelect={handleFileSelect}
             hasFile={!!selectedFile}
+            onValidationError={handleInvalidFile}
           />
           
           {selectedFile && (
