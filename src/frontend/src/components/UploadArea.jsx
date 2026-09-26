@@ -18,8 +18,9 @@ function UploadArea({ onFileSelect, onValidationError, hasFile }) {
       })
       .then((data) => {
         if (isMounted) {
-          setDatasets(data.datasets || []);
-          setDatasetError(data.datasets?.length ? '' : 'No test samples were found on the backend.');
+          const datasetList = Array.isArray(data) ? data : data.datasets || [];
+          setDatasets(datasetList);
+          setDatasetError(datasetList.length ? '' : 'No test samples were found in the dataset manifest.');
         }
       })
       .catch((error) => {
