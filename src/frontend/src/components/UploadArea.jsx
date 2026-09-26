@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { apiUrl, isProductionApiMissing } from '../lib/api';
+import { assetUrl } from '../lib/api';
 
 function UploadArea({ onFileSelect, onValidationError, hasFile }) {
   const fileInputRef = useRef(null);
@@ -7,13 +7,11 @@ function UploadArea({ onFileSelect, onValidationError, hasFile }) {
   const [datasets, setDatasets] = useState([]);
   const [selectedDataset, setSelectedDataset] = useState('');
   const [isLoadingDataset, setIsLoadingDataset] = useState(false);
-  const [datasetError, setDatasetError] = useState(
-    isProductionApiMissing ? 'Set VITE_API_BASE_URL in Vercel to connect the backend.' : ''
-  );
+  const [datasetError, setDatasetError] = useState('');
 
   useEffect(() => {
     let isMounted = true;
-    fetch(apiUrl('/test-datasets'))
+    fetch('/test-datasets.json')
       .then((response) => {
         if (!response.ok) throw new Error('Dataset catalog is unavailable.');
         return response.json();
@@ -59,7 +57,7 @@ function UploadArea({ onFileSelect, onValidationError, hasFile }) {
     setIsLoadingDataset(true);
     try {
       const encodedPath = datasetPath.split('/').map(encodeURIComponent).join('/');
-      const response = await fetch(apiUrl(`/test-datasets/${encodedPath}`));
+      const response = await fetch(assetUrl(`/${encodedPath}`));
       if (!response.ok) throw new Error('The selected dataset could not be loaded.');
 
       const dataset = datasets.find((item) => item.path === datasetPath);

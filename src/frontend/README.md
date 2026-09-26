@@ -116,13 +116,15 @@ Then open http://localhost:5173. Docker runs the Flask API and the production fr
 
 ## Vercel Deployment
 
-Push the repository to GitHub, then import it from Vercel. Set the Vercel project **Root Directory** to `src/frontend` and set:
+This frontend now performs FFT inference in the browser and does not require the Flask backend. Push the repository to GitHub, import it from Vercel, and set the project **Root Directory** to `src/frontend`.
+
+Set this Vercel environment variable so the test dataset picker can load audio from GitHub Raw:
 
 ```text
-VITE_API_BASE_URL=https://your-public-backend.example.com
+VITE_DATASET_BASE_URL=https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/test
 ```
 
-The Flask backend can be deployed separately on Railway using the repository `railway.json`. Set its `ALLOWED_ORIGINS` environment variable to the Vercel domain. The backend must also include `test/` if the test dataset picker is needed in the deployed demo.
+After changing the environment variable, redeploy because Vite embeds `VITE_*` values during build.
 
 ## Building for Production
 

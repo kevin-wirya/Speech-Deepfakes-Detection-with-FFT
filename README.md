@@ -77,21 +77,18 @@ npm run dev
 
 Opens on http://localhost:5173
 
-### Deploy frontend to Vercel
+### Deploy to Vercel
 
-Vercel digunakan untuk frontend Vite. Backend Flask tetap dijalankan sebagai service/container terpisah karena membutuhkan NumPy, SciPy, librosa, FFmpeg, reference statistics, dan dataset test.
-
-Railway dapat digunakan untuk deploy backend Docker. Konfigurasi Railway tersedia di `railway.json` dan menggunakan `src/backend/Dockerfile`.
+Frontend sekarang menjalankan decoding audio, FFT, feature extraction, dan geometric scoring langsung di browser. Karena itu demo utama tidak membutuhkan backend Flask, Railway, atau Docker.
 
 1. Push repository ini ke GitHub.
 2. Di Vercel pilih **Add New Project** -> **Import Git Repository**.
 3. Pilih repository GitHub ini dan set **Root Directory** ke `src/frontend`.
 4. Pastikan Framework Preset adalah **Vite**.
-5. Set environment variable `VITE_API_BASE_URL` ke URL public backend, misalnya `https://your-backend.example.com`.
-6. Pada backend, set `ALLOWED_ORIGINS` ke URL Vercel, misalnya `https://your-project.vercel.app`.
-7. Deploy. Push berikutnya ke branch production akan memicu deployment otomatis.
+5. Set `VITE_DATASET_BASE_URL` ke `https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/test`.
+6. Deploy. Push berikutnya ke branch production akan memicu deployment otomatis.
 
-Konfigurasi Vercel tersedia di `src/frontend/vercel.json`, dan template variable tersedia di `src/frontend/.env.example`.
+Konfigurasi Vercel tersedia di `src/frontend/vercel.json`, template variable tersedia di `src/frontend/.env.example`, dan manifest dataset tersedia di `src/frontend/public/test-datasets.json`.
 
 ## Technology Stack
 

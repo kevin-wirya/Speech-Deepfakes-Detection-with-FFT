@@ -1,7 +1,5 @@
-const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const datasetBaseUrl = (import.meta.env.VITE_DATASET_BASE_URL || '').replace(/\/$/, '');
 
-export const isProductionApiMissing = import.meta.env.PROD && !apiBaseUrl;
-
-export function apiUrl(path) {
-  return `${apiBaseUrl}${path}`;
+export function assetUrl(path) {
+  return `${datasetBaseUrl}${path}`;
 }

@@ -6,7 +6,7 @@ import StatusMessage from './components/StatusMessage';
 import ButtonGroup from './components/ButtonGroup';
 import ResultContainer from './components/ResultContainer';
 import ParticleBackground from './components/ParticleBackground';
-import { apiUrl } from './lib/api';
+import { analyzeAudioFile } from './lib/browserDetector';
 import './App.css';
 
 function App() {
@@ -50,16 +50,8 @@ function App() {
     setStatus({ message: 'Analyzing audio with FFT Phase Geometry...', type: 'loading' });
     setResult(null);
 
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-
     try {
-      const response = await fetch(apiUrl('/predict'), {
-        method: 'POST',
-        body: formData
-      });
-
-      const data = await response.json();
+      const data = await analyzeAudioFile(selectedFile);
 
       if (data.success) {
         setResult(data);
