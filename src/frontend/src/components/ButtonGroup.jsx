@@ -11,12 +11,10 @@ function ButtonGroup({ onPredict, onClear, isAnalyzing, hasFile }) {
             <span className="spinner"></span>Analyzing...
           </>
         ) : (
-          '🔍 Analyze Audio'
+          'Analyze sample'
         )}
       </button>
-      <button className="clear-btn" onClick={onClear}>
-        🗑️ Clear
-      </button>
+      <button className="clear-btn" onClick={onClear}>Reset</button>
     </div>
   );
 }
