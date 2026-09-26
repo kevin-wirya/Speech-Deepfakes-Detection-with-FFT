@@ -122,7 +122,7 @@ Push the repository to GitHub, then import it from Vercel. Set the Vercel projec
 VITE_API_BASE_URL=https://your-public-backend.example.com
 ```
 
-The Flask backend must be deployed separately. Set its `ALLOWED_ORIGINS` environment variable to the Vercel domain. The backend must also include `test/` if the test dataset picker is needed in the deployed demo.
+The Flask backend can be deployed separately on Railway using the repository `railway.json`. Set its `ALLOWED_ORIGINS` environment variable to the Vercel domain. The backend must also include `test/` if the test dataset picker is needed in the deployed demo.
 
 ## Building for Production
 

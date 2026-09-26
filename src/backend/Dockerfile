@@ -22,6 +22,6 @@ COPY test/ /app/test/
 EXPOSE 5000
 
 HEALTHCHECK --interval=10s --timeout=10s --start-period=30s --retries=12 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/status', timeout=5)"
+    CMD python -c "import os, urllib.request; urllib.request.urlopen(f\"http://localhost:{os.getenv('PORT', '5000')}/status\", timeout=5)"
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "120", "app:app"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 1 --timeout 120 app:app"]

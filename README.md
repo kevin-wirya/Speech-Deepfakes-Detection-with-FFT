@@ -81,6 +81,8 @@ Opens on http://localhost:5173
 
 Vercel digunakan untuk frontend Vite. Backend Flask tetap dijalankan sebagai service/container terpisah karena membutuhkan NumPy, SciPy, librosa, FFmpeg, reference statistics, dan dataset test.
 
+Railway dapat digunakan untuk deploy backend Docker. Konfigurasi Railway tersedia di `railway.json` dan menggunakan `src/backend/Dockerfile`.
+
 1. Push repository ini ke GitHub.
 2. Di Vercel pilih **Add New Project** -> **Import Git Repository**.
 3. Pilih repository GitHub ini dan set **Root Directory** ke `src/frontend`.
