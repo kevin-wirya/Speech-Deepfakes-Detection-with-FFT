@@ -62,26 +62,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      <aside className="sidebar" aria-label="Primary navigation">
-        <div className="brand-mark">SD</div>
-        <nav className="sidebar-nav">
-          <button className="sidebar-link active" aria-label="Analysis workspace" title="Analysis workspace">⌁</button>
-          <button className="sidebar-link" aria-label="Dataset library" title="Dataset library">▦</button>
-          <button className="sidebar-link" aria-label="Evaluation reports" title="Evaluation reports">▤</button>
-          <button className="sidebar-link" aria-label="Model notes" title="Model notes">◫</button>
-        </nav>
-        <div className="sidebar-bottom">
-          <button className="sidebar-link" aria-label="Settings" title="Settings">⚙</button>
-          <div className="profile-dot">K</div>
-        </div>
-      </aside>
-
       <section className="workspace">
-        <div className="topbar">
-          <div className="search-field"><span>⌕</span><span>Search files, features, reports...</span></div>
-          <div className="topbar-meta"><span className="live-dot"></span> Browser analysis <span className="topbar-divider">|</span> FFT v1</div>
-        </div>
-
         <main className="dashboard">
           <Header />
           <div className={`dashboard-grid ${result ? 'has-result' : ''}`}>

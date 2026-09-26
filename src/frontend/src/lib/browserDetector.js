@@ -23,11 +23,10 @@ function nextPowerOfTwo(value) {
   return size;
 }
 
-function fft(signal) {
-  const size = nextPowerOfTwo(signal.length);
-  const real = new Float64Array(size);
-  const imaginary = new Float64Array(size);
-  real.set(signal);
+function fftRadix2(inputReal, inputImaginary, inverse = false) {
+  const size = inputReal.length;
+  const real = Float64Array.from(inputReal);
+  const imaginary = Float64Array.from(inputImaginary);
 
   for (let index = 1, reverse = 0; index < size; index += 1) {
     let bit = size >> 1;
@@ -39,7 +38,7 @@ function fft(signal) {
   }
 
   for (let length = 2; length <= size; length <<= 1) {
-    const angle = -2 * Math.PI / length;
+    const angle = (inverse ? 2 : -2) * Math.PI / length;
     const half = length >> 1;
     for (let start = 0; start < size; start += length) {
       for (let offset = 0; offset < half; offset += 1) {
@@ -58,22 +57,59 @@ function fft(signal) {
     }
   }
 
+  if (inverse) {
+    for (let index = 0; index < size; index += 1) {
+      real[index] /= size;
+      imaginary[index] /= size;
+    }
+  }
+
   return { real, imaginary, size };
 }
 
-function resample(signal, sourceRate, targetRate) {
-  if (sourceRate === targetRate) return signal;
-  const outputLength = Math.max(1, Math.round(signal.length * targetRate / sourceRate));
-  const output = new Float32Array(outputLength);
-  const ratio = sourceRate / targetRate;
-  for (let index = 0; index < outputLength; index += 1) {
-    const sourceIndex = index * ratio;
-    const lower = Math.floor(sourceIndex);
-    const upper = Math.min(lower + 1, signal.length - 1);
-    const fraction = sourceIndex - lower;
-    output[index] = signal[lower] * (1 - fraction) + signal[upper] * fraction;
+function fft(signal) {
+  const size = signal.length;
+  const imaginaryInput = new Float64Array(size);
+  if ((size & (size - 1)) === 0) {
+    return fftRadix2(signal, imaginaryInput);
   }
-  return output;
+
+  // Bluestein's algorithm matches scipy.fft for non-power-of-two audio lengths.
+  const convolutionSize = nextPowerOfTwo(2 * size - 1);
+  const realA = new Float64Array(convolutionSize);
+  const imaginaryA = new Float64Array(convolutionSize);
+  const realB = new Float64Array(convolutionSize);
+  const imaginaryB = new Float64Array(convolutionSize);
+  for (let index = 0; index < size; index += 1) {
+    const angle = Math.PI * index * index / size;
+    const cosine = Math.cos(angle);
+    const sine = Math.sin(angle);
+    realA[index] = signal[index] * cosine;
+    imaginaryA[index] = -signal[index] * sine;
+    realB[index] = cosine;
+    imaginaryB[index] = sine;
+    if (index > 0) {
+      realB[convolutionSize - index] = cosine;
+      imaginaryB[convolutionSize - index] = sine;
+    }
+  }
+  const transformedA = fftRadix2(realA, imaginaryA);
+  const transformedB = fftRadix2(realB, imaginaryB);
+  const productReal = new Float64Array(convolutionSize);
+  const productImaginary = new Float64Array(convolutionSize);
+  for (let index = 0; index < convolutionSize; index += 1) {
+    productReal[index] = transformedA.real[index] * transformedB.real[index] - transformedA.imaginary[index] * transformedB.imaginary[index];
+    productImaginary[index] = transformedA.real[index] * transformedB.imaginary[index] + transformedA.imaginary[index] * transformedB.real[index];
+  }
+  const convolution = fftRadix2(productReal, productImaginary, true);
+  const real = new Float64Array(size);
+  const imaginary = new Float64Array(size);
+  for (let index = 0; index < size; index += 1) {
+    const angle = Math.PI * index * index / size;
+    real[index] = convolution.real[index] * Math.cos(angle) + convolution.imaginary[index] * Math.sin(angle);
+    imaginary[index] = convolution.imaginary[index] * Math.cos(angle) - convolution.real[index] * Math.sin(angle);
+  }
+  return { real, imaginary, size };
 }
 
 function extractFeatures(signal) {
@@ -191,8 +227,7 @@ export async function analyzeAudioFile(file) {
     }
     if (!peak || peak < 1e-5) throw new Error('Audio is silent or empty.');
     const normalized = Float32Array.from(monoSignal, (value) => value / peak);
-    const signal = resample(normalized, audioBuffer.sampleRate, 16000);
-    const features = extractFeatures(signal);
+    const features = extractFeatures(normalized);
     const result = classify(features);
 
     return {
@@ -200,7 +235,7 @@ export async function analyzeAudioFile(file) {
       ...result,
       quality: {
         duration_seconds: Number(durationSeconds.toFixed(3)),
-        sample_rate: 16000,
+        sample_rate: audioBuffer.sampleRate,
         channels: audioBuffer.numberOfChannels,
         warnings: peak >= 0.999 ? ['Audio contains clipping'] : []
       },

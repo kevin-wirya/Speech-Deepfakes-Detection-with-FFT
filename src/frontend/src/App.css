@@ -34,89 +34,7 @@ button { color: inherit; }
   min-height: 100vh;
 }
 
-.sidebar {
-  align-items: center;
-  background: #0a0c11;
-  border-right: 1px solid var(--line-soft);
-  display: flex;
-  flex-direction: column;
-  padding: 24px 14px 20px;
-  width: 72px;
-}
-
-.brand-mark {
-  align-items: center;
-  background: var(--lavender);
-  border-radius: 10px;
-  color: #151724;
-  display: flex;
-  font-size: 12px;
-  font-weight: 700;
-  height: 36px;
-  justify-content: center;
-  letter-spacing: 0;
-  width: 36px;
-}
-
-.sidebar-nav { display: grid; gap: 12px; margin-top: 52px; }
-.sidebar-bottom { display: grid; gap: 18px; margin-top: auto; }
-
-.sidebar-link {
-  align-items: center;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  color: var(--dim);
-  cursor: pointer;
-  display: flex;
-  font-size: 18px;
-  height: 38px;
-  justify-content: center;
-  padding: 0;
-  transition: background 160ms ease, color 160ms ease;
-  width: 38px;
-}
-
-.sidebar-link:hover, .sidebar-link.active {
-  background: #1d2130;
-  color: var(--lavender);
-}
-
-.sidebar-link.active { border-color: #343951; }
-.profile-dot {
-  align-items: center;
-  background: #252b37;
-  border: 1px solid #3a4250;
-  border-radius: 50%;
-  color: #dce0e8;
-  display: flex;
-  font-size: 11px;
-  height: 30px;
-  justify-content: center;
-  width: 30px;
-}
-
 .workspace { flex: 1; min-width: 0; }
-.topbar {
-  align-items: center;
-  border-bottom: 1px solid var(--line-soft);
-  display: flex;
-  height: 72px;
-  justify-content: space-between;
-  padding: 0 clamp(24px, 4vw, 64px);
-}
-.search-field {
-  align-items: center;
-  color: var(--dim);
-  display: flex;
-  font-size: 12px;
-  gap: 10px;
-  min-width: 250px;
-}
-.search-field span:first-child { color: var(--muted); font-size: 19px; }
-.topbar-meta { color: var(--muted); font-family: var(--mono); font-size: 10px; }
-.live-dot { background: var(--lime); border-radius: 50%; display: inline-block; height: 6px; margin-right: 7px; width: 6px; }
-.topbar-divider { color: var(--line); margin: 0 12px; }
 
 .dashboard { margin: 0 auto; max-width: 1440px; padding: 54px clamp(24px, 4vw, 64px) 72px; }
 header { margin-bottom: 44px; }
@@ -276,12 +194,6 @@ audio { filter: none; height: 34px; width: 100%; }
 }
 
 @media (max-width: 620px) {
-  .sidebar { padding: 16px 9px; width: 54px; }
-  .brand-mark { height: 32px; width: 32px; }
-  .sidebar-link { height: 34px; width: 34px; }
-  .topbar { height: 58px; padding: 0 18px; }
-  .topbar-meta { display: none; }
-  .search-field { min-width: 0; }
   .dashboard { padding: 35px 15px 50px; }
   header { margin-bottom: 30px; }
   h1 { font-size: 33px; }
