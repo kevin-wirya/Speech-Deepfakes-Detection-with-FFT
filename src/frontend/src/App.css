@@ -289,6 +289,13 @@ audio {
   margin-top: 7px;
 }
 
+.dataset-picker-error {
+  color: #fca5a5;
+  font-size: 10px;
+  line-height: 1.4;
+  margin-top: 7px;
+}
+
 /* Upload Area */
 .upload-area {
   border: 2px dashed rgba(37, 99, 235, 0.3);

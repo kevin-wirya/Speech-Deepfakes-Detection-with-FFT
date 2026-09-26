@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { apiUrl } from '../lib/api';
+import { apiUrl, isProductionApiMissing } from '../lib/api';
 
 function UploadArea({ onFileSelect, onValidationError, hasFile }) {
   const fileInputRef = useRef(null);
@@ -7,6 +7,9 @@ function UploadArea({ onFileSelect, onValidationError, hasFile }) {
   const [datasets, setDatasets] = useState([]);
   const [selectedDataset, setSelectedDataset] = useState('');
   const [isLoadingDataset, setIsLoadingDataset] = useState(false);
+  const [datasetError, setDatasetError] = useState(
+    isProductionApiMissing ? 'Set VITE_API_BASE_URL in Vercel to connect the backend.' : ''
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -16,10 +19,16 @@ function UploadArea({ onFileSelect, onValidationError, hasFile }) {
         return response.json();
       })
       .then((data) => {
-        if (isMounted) setDatasets(data.datasets || []);
+        if (isMounted) {
+          setDatasets(data.datasets || []);
+          setDatasetError(data.datasets?.length ? '' : 'No test samples were found on the backend.');
+        }
       })
-      .catch(() => {
-        if (isMounted) setDatasets([]);
+      .catch((error) => {
+        if (isMounted) {
+          setDatasets([]);
+          setDatasetError(error.message || 'Dataset catalog is unavailable.');
+        }
       });
 
     return () => {
@@ -107,6 +116,7 @@ function UploadArea({ onFileSelect, onValidationError, hasFile }) {
           ))}
         </select>
         {isLoadingDataset && <div className="dataset-picker-status">Loading sample...</div>}
+        {datasetError && <div className="dataset-picker-error">{datasetError}</div>}
       </div>
 
       <div 
